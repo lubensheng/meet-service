@@ -4,5 +4,5 @@ export class LoginUserVo {
   userInfo: User;
   accessToken: string;
   refreshToken: string;
-  //
+  // 测试jenkins拉取代码
 }
