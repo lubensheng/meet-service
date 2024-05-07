@@ -8,8 +8,11 @@ import { RedisModule } from './redis/redis.module';
 import { EmailModule } from './email/email.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { MeetModule } from './meet/meet.module';
 import Role from './user/entities/role.entity';
 import Permission from './user/entities/permission.entity';
+import { Meet } from './meet/entities/meet.entity';
+import { MeetUse } from './meet/entities/meetUse.entity';
 
 @Module({
   imports: [
@@ -28,7 +31,7 @@ import Permission from './user/entities/permission.entity';
           database: configService.get('mysql_server_database'),
           synchronize: true,
           logging: true,
-          entities: [User, Role, Permission],
+          entities: [User, Role, Permission, Meet, MeetUse],
           poolSize: 10,
           connectorPackage: 'mysql2',
           extra: {
@@ -53,6 +56,7 @@ import Permission from './user/entities/permission.entity';
     UserModule,
     RedisModule,
     EmailModule,
+    MeetModule,
   ],
   controllers: [AppController],
   providers: [AppService],

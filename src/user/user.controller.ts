@@ -6,14 +6,22 @@ import {
   Get,
   Query,
   HttpStatus,
+  Param,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { RegisterUser } from './dto/register-user.dto';
 import LoginUser from './dto/login-user.dto';
-import { ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiProperty,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { EmailService } from 'src/email/email.service';
 import { RedisService } from 'src/redis/redis.service';
 import Message from 'src/utils/messgae';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @ApiTags('用户操作')
 @Controller('user')
@@ -62,6 +70,42 @@ export class UserController {
     message.setIsSuccess(true);
     message.setMessage('发送成功');
     return message;
+  }
+
+  @ApiQuery({
+    name: 'updateUserInfo',
+    description: '修改用户信息(只支持修改密码)',
+  })
+  @Post('updateUserInfo')
+  async updateUserInfo(@Body() userInfo: UpdateUserDto) {
+    return this.userService.updateUserInfo(userInfo);
+  }
+
+  @ApiQuery({
+    name: 'getUserList',
+    description: '获取用户列表',
+  })
+  @Post('getUserList')
+  async getUserList() {
+    return this.userService.getUserList();
+  }
+
+  @ApiQuery({
+    name: 'getUserInfoById',
+    description: '通过id去获取当前用户信息',
+  })
+  @Get('getUserInfoById/:userId')
+  async getUserInfoById(@Param('userId') userId: number) {
+    return this.userService.getUserInfoById(userId);
+  }
+
+  @ApiQuery({
+    name: 'getUserInfoByUsername',
+    description: '通过用户名称去获取当前用户信息',
+  })
+  @Get('getUserInfoByUsername/:username')
+  async getUserInfoByUsername(@Param('username') username: string) {
+    return this.userService.getUserInfoByUsername(username);
   }
 
   @Get('init-data')

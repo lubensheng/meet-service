@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { join } from 'path';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { FormatResponseInterceptor } from './format-response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -17,6 +18,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, document);
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalInterceptors(new FormatResponseInterceptor());
   app.useStaticAssets(join(__dirname, '..', 'public'), { prefix: '/static' });
   await app.listen(3000);
 }

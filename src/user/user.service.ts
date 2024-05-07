@@ -16,6 +16,7 @@ import Role from './entities/role.entity';
 import Permission from './entities/permission.entity';
 import { LoginUserVo } from './vo/login.vo';
 import { JwtService } from '@nestjs/jwt';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -109,7 +110,57 @@ export class UserService {
     message.setIsSuccess(true);
     message.setMessage('登陆成功');
     message.setData(loginUserVo);
-    return message;
+    return loginUserVo;
+  }
+
+  async getUserInfoById(id: number) {
+    const userInfo = await this.userRepository.findOne({
+      where: {
+        id: id,
+      },
+      relations: ['roles', 'roles.permissions'],
+    });
+
+    return userInfo;
+  }
+
+  async updateUserInfo(userInfo: UpdateUserDto) {
+    const user = await this.userRepository.findOne({
+      where: {
+        password: userInfo.password,
+        username: userInfo.username,
+      },
+    });
+
+    if (!user) {
+      return '用户不存在或者密码错误';
+    }
+
+    await this.userRepository.update(
+      { id: user.id },
+      {
+        password: userInfo.newPassword,
+      },
+    );
+
+    return '修改成功';
+  }
+
+  async getUserInfoByUsername(username: string) {
+    const user = await this.userRepository.findOne({
+      where: {
+        username,
+      },
+    });
+    if (!user) {
+      return '用户不存在';
+    }
+    return user;
+  }
+
+  async getUserList() {
+    const users = await this.userRepository.find();
+    return users;
   }
 
   async initData() {
