@@ -22,6 +22,8 @@ import { MeetUse } from './meet/entities/meetUse.entity';
     }),
     TypeOrmModule.forRootAsync({
       useFactory(configService: ConfigService) {
+        console.log('configService');
+        console.log(configService.get('mysql_server_password'));
         return {
           type: 'mysql',
           host: configService.get('mysql_server_host'),

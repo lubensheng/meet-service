@@ -16,7 +16,7 @@ import { ConfigService } from '@nestjs/config';
             port: configService.get('redis_server_port'),
           },
           database: 1,
-          password: configService.get('redis_server_passwod'),
+          // password: configService.get('redis_server_passwod'),
         });
         await client.connect();
         return client;
